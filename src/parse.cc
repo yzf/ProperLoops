@@ -67,7 +67,6 @@
 #include <assert.h>
 #include <cstdio>
 #include <cstring>
-#include <vector>
 #include <string>
 #include "structs.h"
 #include "rule.h"
@@ -80,7 +79,7 @@ extern "C" {
     extern int yylex(void);
 }
  
-extern vector<Rule> g_rules;
+extern RuleSet g_rules;
 extern Vocabulary g_vocabulary;
 
 int id;
@@ -90,7 +89,7 @@ void yyerror(const char* s) {
 }
 
 
-#line 94 "../src/parse.cc" /* yacc.c:339  */
+#line 93 "../src/parse.cc" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -150,7 +149,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 29 "yacc.y" /* yacc.c:355  */
+#line 28 "yacc.y" /* yacc.c:355  */
 
     char* s;
     int i;
@@ -158,7 +157,7 @@ union YYSTYPE
     struct _HeadHelper* h;
     struct _BodyHelper* b;
 
-#line 162 "../src/parse.cc" /* yacc.c:355  */
+#line 161 "../src/parse.cc" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -173,7 +172,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 177 "../src/parse.cc" /* yacc.c:358  */
+#line 176 "../src/parse.cc" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -471,8 +470,8 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    56,    56,    59,    63,    67,    74,    83,    92,   107,
-     111,   118,   122,   130,   133,   139,   148,   158,   163,   169
+       0,    55,    55,    58,    62,    66,    73,    82,    91,   106,
+     110,   117,   121,   129,   132,   138,   147,   157,   162,   168
 };
 #endif
 
@@ -1255,33 +1254,33 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 56 "yacc.y" /* yacc.c:1646  */
+#line 55 "yacc.y" /* yacc.c:1646  */
     {
         //printf("dlp\n");
     }
-#line 1263 "../src/parse.cc" /* yacc.c:1646  */
+#line 1262 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 63 "yacc.y" /* yacc.c:1646  */
+#line 62 "yacc.y" /* yacc.c:1646  */
     {
-        Rule rule((yyvsp[0].r));
+        Rule* rule = new Rule((yyvsp[0].r));
         g_rules.push_back(rule);
     }
-#line 1272 "../src/parse.cc" /* yacc.c:1646  */
+#line 1271 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 67 "yacc.y" /* yacc.c:1646  */
+#line 66 "yacc.y" /* yacc.c:1646  */
     {
-        Rule rule((yyvsp[0].r));
+        Rule* rule = new Rule((yyvsp[0].r));
         g_rules.push_back(rule);
     }
-#line 1281 "../src/parse.cc" /* yacc.c:1646  */
+#line 1280 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 74 "yacc.y" /* yacc.c:1646  */
+#line 73 "yacc.y" /* yacc.c:1646  */
     {//事实
         (yyval.r) = new RuleHelper();
         (yyval.r)->type = kFact;
@@ -1291,11 +1290,11 @@ yyreduce:
         }
         (yyval.r)->body_length = 0;
     }
-#line 1295 "../src/parse.cc" /* yacc.c:1646  */
+#line 1294 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 83 "yacc.y" /* yacc.c:1646  */
+#line 82 "yacc.y" /* yacc.c:1646  */
     {//约束
         (yyval.r) = new RuleHelper();
         (yyval.r)->type = kConstrant;
@@ -1305,11 +1304,11 @@ yyreduce:
             (yyval.r)->body[i] = (yyvsp[-1].b)->atoms[i];
         }
     }
-#line 1309 "../src/parse.cc" /* yacc.c:1646  */
+#line 1308 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 92 "yacc.y" /* yacc.c:1646  */
+#line 91 "yacc.y" /* yacc.c:1646  */
     {//规则
         (yyval.r) = new RuleHelper();
         (yyval.r)->type = kRule;
@@ -1322,65 +1321,65 @@ yyreduce:
             (yyval.r)->body[i] = (yyvsp[-1].b)->atoms[i];
         }
     }
-#line 1326 "../src/parse.cc" /* yacc.c:1646  */
+#line 1325 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 107 "yacc.y" /* yacc.c:1646  */
+#line 106 "yacc.y" /* yacc.c:1646  */
     {
         (yyvsp[-2].h)->atoms[(yyvsp[-2].h)->length] = (yyvsp[0].i);
         (yyvsp[-2].h)->length ++;
     }
-#line 1335 "../src/parse.cc" /* yacc.c:1646  */
+#line 1334 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 111 "yacc.y" /* yacc.c:1646  */
+#line 110 "yacc.y" /* yacc.c:1646  */
     {
         (yyval.h) = new HeadHelper();
         (yyval.h)->atoms[0] = (yyvsp[0].i);
         (yyval.h)->length = 1;
     }
-#line 1345 "../src/parse.cc" /* yacc.c:1646  */
+#line 1344 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 118 "yacc.y" /* yacc.c:1646  */
+#line 117 "yacc.y" /* yacc.c:1646  */
     {
         (yyvsp[-2].b)->atoms[(yyvsp[-2].b)->length] = (yyvsp[0].i);
         (yyvsp[-2].b)->length ++;
     }
-#line 1354 "../src/parse.cc" /* yacc.c:1646  */
+#line 1353 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 122 "yacc.y" /* yacc.c:1646  */
+#line 121 "yacc.y" /* yacc.c:1646  */
     {
         (yyval.b) = new BodyHelper();
         (yyval.b)->atoms[0] = (yyvsp[0].i);
         (yyval.b)->length = 1;
     }
-#line 1364 "../src/parse.cc" /* yacc.c:1646  */
+#line 1363 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 130 "yacc.y" /* yacc.c:1646  */
+#line 129 "yacc.y" /* yacc.c:1646  */
     {
         (yyval.i) = -1 * (yyvsp[0].i);
     }
-#line 1372 "../src/parse.cc" /* yacc.c:1646  */
+#line 1371 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 133 "yacc.y" /* yacc.c:1646  */
+#line 132 "yacc.y" /* yacc.c:1646  */
     {
         (yyval.i) = (yyvsp[0].i);
     }
-#line 1380 "../src/parse.cc" /* yacc.c:1646  */
+#line 1379 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 139 "yacc.y" /* yacc.c:1646  */
+#line 138 "yacc.y" /* yacc.c:1646  */
     {
         char str_buff[512];
         sprintf(str_buff, "%s(%s)", (yyvsp[-3].s), (yyvsp[-1].s));
@@ -1390,11 +1389,11 @@ yyreduce:
             id = g_vocabulary.AddAtom(atom_name);
         (yyval.i) = id;
     }
-#line 1394 "../src/parse.cc" /* yacc.c:1646  */
+#line 1393 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 148 "yacc.y" /* yacc.c:1646  */
+#line 147 "yacc.y" /* yacc.c:1646  */
     {
         string atom_name = (yyvsp[0].s);
         int id = g_vocabulary.GetAtomId(atom_name);
@@ -1402,37 +1401,37 @@ yyreduce:
             id = g_vocabulary.AddAtom(atom_name);
         (yyval.i) = id;
     }
-#line 1406 "../src/parse.cc" /* yacc.c:1646  */
+#line 1405 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 158 "yacc.y" /* yacc.c:1646  */
+#line 157 "yacc.y" /* yacc.c:1646  */
     {
         char str_buff[512];
         sprintf(str_buff, "%s,%s", (yyvsp[-2].s), (yyvsp[0].s));
         (yyval.s) = strdup(str_buff);
     }
-#line 1416 "../src/parse.cc" /* yacc.c:1646  */
+#line 1415 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 163 "yacc.y" /* yacc.c:1646  */
+#line 162 "yacc.y" /* yacc.c:1646  */
     {
         (yyval.s) = strdup((yyvsp[0].s));
     }
-#line 1424 "../src/parse.cc" /* yacc.c:1646  */
+#line 1423 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 169 "yacc.y" /* yacc.c:1646  */
+#line 168 "yacc.y" /* yacc.c:1646  */
     {
         (yyval.s) = strdup((yyvsp[0].s));
     }
-#line 1432 "../src/parse.cc" /* yacc.c:1646  */
+#line 1431 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
 
-#line 1436 "../src/parse.cc" /* yacc.c:1646  */
+#line 1435 "../src/parse.cc" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1660,5 +1659,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 173 "yacc.y" /* yacc.c:1906  */
+#line 172 "yacc.y" /* yacc.c:1906  */
 

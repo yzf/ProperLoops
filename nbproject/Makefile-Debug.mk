@@ -35,13 +35,14 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/src/dlp.o \
+	${OBJECTDIR}/src/algorithm.o \
 	${OBJECTDIR}/src/global.o \
 	${OBJECTDIR}/src/graph.o \
 	${OBJECTDIR}/src/lex.o \
 	${OBJECTDIR}/src/main.o \
 	${OBJECTDIR}/src/parse.o \
 	${OBJECTDIR}/src/rule.o \
+	${OBJECTDIR}/src/util.o \
 	${OBJECTDIR}/src/vocabulary.o
 
 
@@ -69,10 +70,10 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/properloops: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/properloops ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/src/dlp.o: src/dlp.cc 
+${OBJECTDIR}/src/algorithm.o: src/algorithm.cc 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/dlp.o src/dlp.cc
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/algorithm.o src/algorithm.cc
 
 ${OBJECTDIR}/src/global.o: src/global.cc 
 	${MKDIR} -p ${OBJECTDIR}/src
@@ -103,6 +104,11 @@ ${OBJECTDIR}/src/rule.o: src/rule.cc
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/rule.o src/rule.cc
+
+${OBJECTDIR}/src/util.o: src/util.cc 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/util.o src/util.cc
 
 ${OBJECTDIR}/src/vocabulary.o: src/vocabulary.cc 
 	${MKDIR} -p ${OBJECTDIR}/src

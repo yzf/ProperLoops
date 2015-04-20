@@ -21,5 +21,6 @@ public:
     void Output(FILE*) const;
 };
 
+
 #endif	/* RULE_H */
 

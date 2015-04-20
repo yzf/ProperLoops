@@ -10,7 +10,6 @@
 
 #include <cstdio>
 #include "structs.h"
-#include "dlp.h"
 
 /*
  * 与图相关的一些函数
@@ -18,10 +17,11 @@
 
 Graph GetDependencyGraph(const RuleSet&);
 Graph GetInducedSubgraph(const AtomIdSet&, const Graph&);
-RuleIdSet GetExternalSupport(const AtomIdSet&, const RuleSet&);
-RuleIdSet GetExternalSupportWithConstrant(const AtomIdSet&, const AtomIdSet&, const RuleSet&);
-void OutputGraph(FILE*, const Graph&);
-void OutputExternalSupport(FILE*, const RuleIdSet&, const RuleSet&);
+RuleSet GetExternalSupport(const AtomIdSet&, const RuleSet&);
+RuleSet GetExternalSupportWithConstrant(const AtomIdSet&, const AtomIdSet&, const RuleSet&);
+void Tarjan(const int&, const Graph&, SccSet&);
+SccSet GetSccsOfGraph(const Graph&);
+
 
 #endif	/* GRAPH_H */
 

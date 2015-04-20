@@ -2,7 +2,6 @@
 #include <assert.h>
 #include <cstdio>
 #include <cstring>
-#include <vector>
 #include <string>
 #include "structs.h"
 #include "rule.h"
@@ -15,7 +14,7 @@ extern "C" {
     extern int yylex(void);
 }
  
-extern vector<Rule> g_rules;
+extern RuleSet g_rules;
 extern Vocabulary g_vocabulary;
 
 int id;
@@ -61,11 +60,11 @@ dlp
 
 rules
     : rules rule {
-        Rule rule($2);
+        Rule* rule = new Rule($2);
         g_rules.push_back(rule);
     }
     | rule {
-        Rule rule($1);
+        Rule* rule = new Rule($1);
         g_rules.push_back(rule);
     }
 ;
