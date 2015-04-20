@@ -15,6 +15,7 @@
 #include <deque>
 
 class Rule;
+class Loop;
 
 const int kMaxHeadLength = 512;//规则头部的最大原子个数
 const int kMaxBodyLength = 512;//规则体部的最大文字个数
@@ -47,13 +48,11 @@ typedef struct _BodyHelper {
 } BodyHelper;
 
 typedef std::vector<Rule*> RuleSet;
-typedef std::set<int> LiteralIdSet;
-typedef LiteralIdSet AtomIdSet;
-typedef std::vector<std::string> AtomSet;
-typedef std::map<int, AtomIdSet> Graph;
-typedef AtomIdSet Scc;
-typedef std::deque<Scc> SccSet;
-typedef AtomIdSet Loop;
+typedef std::set<int> LiteralSet;
+typedef LiteralSet AtomSet;
+typedef std::vector<std::string> AtomNameSet;
+typedef std::map<int, AtomSet> EdgeMap;
+typedef std::deque<Loop> LoopSet;
 
 #endif	/* STRUCTS_H */
 

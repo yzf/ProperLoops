@@ -12,7 +12,7 @@
 
 class Vocabulary {
 private:
-    AtomSet atoms_;//原子，atoms_[i-1]保存的是id为i的原子的名字
+    AtomNameSet atoms_;//原子，atoms_[i-1]保存的是id为i的原子的名字
 public:
     int AddAtom(const std::string&);
     std::string GetAtom(const int&) const;

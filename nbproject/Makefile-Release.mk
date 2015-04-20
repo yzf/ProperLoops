@@ -39,8 +39,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/global.o \
 	${OBJECTDIR}/src/graph.o \
 	${OBJECTDIR}/src/lex.o \
+	${OBJECTDIR}/src/loop.o \
 	${OBJECTDIR}/src/main.o \
 	${OBJECTDIR}/src/parse.o \
+	${OBJECTDIR}/src/program.o \
 	${OBJECTDIR}/src/rule.o \
 	${OBJECTDIR}/src/util.o \
 	${OBJECTDIR}/src/vocabulary.o
@@ -90,6 +92,11 @@ ${OBJECTDIR}/src/lex.o: src/lex.cc
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lex.o src/lex.cc
 
+${OBJECTDIR}/src/loop.o: src/loop.cc 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/loop.o src/loop.cc
+
 ${OBJECTDIR}/src/main.o: src/main.cc 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
@@ -99,6 +106,11 @@ ${OBJECTDIR}/src/parse.o: src/parse.cc
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/parse.o src/parse.cc
+
+${OBJECTDIR}/src/program.o: src/program.cc 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/program.o src/program.cc
 
 ${OBJECTDIR}/src/rule.o: src/rule.cc 
 	${MKDIR} -p ${OBJECTDIR}/src

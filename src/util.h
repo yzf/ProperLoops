@@ -14,14 +14,13 @@
 /*
  * 各种辅助函数
  */
-AtomIdSet HeadOfRules(const RuleSet&);
+AtomSet HeadOfRules(const RuleSet&);
 /*
  * 输出函数
  */
-void OutputGraph(FILE*, const Graph&);
-void OutputExternalSupport(FILE*, const RuleSet&);
-void OutputAtoms(FILE*, const AtomIdSet&);
-void OutputSccs(FILE*, const SccSet&);
+void OutputRules(FILE*, const RuleSet&);
+void OutputAtoms(FILE*, const AtomSet&);
+void OutputSccs(FILE*, const LoopSet&);
 
 #endif	/* UTIL_H */
 

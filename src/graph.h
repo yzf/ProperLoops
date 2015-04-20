@@ -9,18 +9,26 @@
 #define	GRAPH_H
 
 #include <cstdio>
+#include <vector>
 #include "structs.h"
 
-/*
- * 与图相关的一些函数
- */
+class Program;
 
-Graph GetDependencyGraph(const RuleSet&);
-Graph GetInducedSubgraph(const AtomIdSet&, const Graph&);
-RuleSet GetExternalSupport(const AtomIdSet&, const RuleSet&);
-RuleSet GetExternalSupportWithConstrant(const AtomIdSet&, const AtomIdSet&, const RuleSet&);
-void Tarjan(const int&, const Graph&, SccSet&);
-SccSet GetSccsOfGraph(const Graph&);
+class Graph {
+private:
+    mutable std::vector<int> pre_, low_, s_;
+    mutable int stop_, cnt_;
+public:
+    EdgeMap edge_map_;
+    const Program* program_;
+private:
+    void Tarjan(const int&, LoopSet&) const;
+public:
+    explicit Graph(const Program*);
+    Graph* GetInducedSubgraph(const AtomSet&) const;
+    LoopSet GetSccs() const;
+    void Output(FILE* out) const;
+};
 
 
 #endif	/* GRAPH_H */

@@ -18,7 +18,7 @@ Rule::Rule(const RuleHelper* rule_helper) {
  * 根据字符表输出规则
  */
 void Rule::Output(FILE* out) const {
-    LiteralIdSet::const_iterator it;
+    LiteralSet::const_iterator it;
     string atom;
     if (type_ != kConstrant) {
         for (it = head_.begin(); it != (-- head_.end()); ++ it) {

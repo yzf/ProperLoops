@@ -12,8 +12,8 @@
 
 class Rule {
 public:
-    LiteralIdSet head_;//规则头部
-    LiteralIdSet body_;//规则体部
+    LiteralSet head_;//规则头部
+    LiteralSet body_;//规则体部
     RuleType type_;//规则类型
 public:
     Rule();

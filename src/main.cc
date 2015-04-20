@@ -12,6 +12,8 @@
 #include "rule.h"
 #include "graph.h"
 #include "util.h"
+#include "loop.h"
+#include "program.h"
 #include "algorithm.h"
 
 using namespace std;
@@ -29,11 +31,25 @@ int main(int argc, char** argv) {
         exit(1);
     }
     yyparse();
-    AtomIdSet all;
+    
+    Program program(g_rules);
+    AtomSet all, s;
     all.insert(1);
     all.insert(2);
     all.insert(3);
-    cout << ElementaryLoopStar(all, g_rules) << endl;
+    s.insert(1);
+    s.insert(2);
+    s.insert(3);
+    Loop loop(s, &program);
+    
+    printf("program:\n");
+    program.Output(stdout);
+    
+    printf("loop:");
+    loop.Output(stdout);
+    
+    cout << ElementaryLoopStar(loop, program) << endl;
+    
     return 0;
 }
 

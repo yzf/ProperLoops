@@ -6,7 +6,9 @@
                    projectFiles="true">
       <itemPath>src/algorithm.h</itemPath>
       <itemPath>src/graph.h</itemPath>
+      <itemPath>src/loop.h</itemPath>
       <itemPath>src/parse.h</itemPath>
+      <itemPath>src/program.h</itemPath>
       <itemPath>src/rule.h</itemPath>
       <itemPath>src/structs.h</itemPath>
       <itemPath>src/util.h</itemPath>
@@ -29,8 +31,10 @@
       <itemPath>src/global.cc</itemPath>
       <itemPath>src/graph.cc</itemPath>
       <itemPath>src/lex.cc</itemPath>
+      <itemPath>src/loop.cc</itemPath>
       <itemPath>src/main.cc</itemPath>
       <itemPath>src/parse.cc</itemPath>
+      <itemPath>src/program.cc</itemPath>
       <itemPath>src/rule.cc</itemPath>
       <itemPath>src/util.cc</itemPath>
       <itemPath>src/vocabulary.cc</itemPath>
@@ -81,11 +85,19 @@
       </item>
       <item path="src/lex.cc" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="src/loop.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/loop.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/main.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/parse.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/parse.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/program.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/program.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/rule.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -143,11 +155,19 @@
       </item>
       <item path="src/lex.cc" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="src/loop.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/loop.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/main.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/parse.cc" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/parse.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/program.cc" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/program.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/rule.cc" ex="false" tool="1" flavor2="0">
       </item>

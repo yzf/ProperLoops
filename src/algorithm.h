@@ -10,10 +10,13 @@
 
 #include "structs.h"
 
+class Loop;
+class Program;
 /*
  * 论文相关的算法
  */
-bool ElementaryLoopStar(const Loop&, const RuleSet&);
+bool ElementaryLoopStar(const Loop&, const Program&);
+
 
 #endif	/* ALGORITHM_H */
 
