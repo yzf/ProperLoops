@@ -11,14 +11,14 @@
 #include "structs.h"
 
 class Vocabulary {
-private:
-    AtomNameSet atoms_;//原子，atoms_[i-1]保存的是id为i的原子的名字
 public:
     int AddAtom(const std::string&);
     std::string GetAtom(const int&) const;
     int GetAtomId(const std::string&) const;
     void Dump(FILE* out) const;
     size_t Size() const;
+private:
+    AtomNameSet atoms_;//原子，atoms_[i-1]保存的是id为i的原子的名字
 };
 
 #endif	/* VOCABULARY_H */

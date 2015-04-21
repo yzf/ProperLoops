@@ -15,19 +15,19 @@
 class Program;
 
 class Graph {
-private:
-    mutable std::vector<int> pre_, low_, s_;
-    mutable int stop_, cnt_;
-public:
-    EdgeMap edge_map_;
-    const Program* program_;
-private:
-    void Tarjan(const int&, LoopSet&) const;
 public:
     explicit Graph(const Program*);
     Graph* GetInducedSubgraph(const AtomSet&) const;
     LoopSet GetSccs() const;
     void Output(FILE* out) const;
+private:
+    void Tarjan(const int&, LoopSet&) const;
+public:
+    EdgeMap edge_map_;
+    const Program* program_;
+private:
+    mutable std::vector<int> pre_, low_, s_;
+    mutable int stop_, cnt_;
 };
 
 

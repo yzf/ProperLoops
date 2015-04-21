@@ -14,6 +14,21 @@ AtomSet HeadOfRules(const RuleSet& rules) {
     return ret;
 }
 
+void FreeRules(RuleSet rules) {
+    for (RuleSet::iterator i = rules.begin(); i != rules.end(); ++ i) {
+        if (NULL != *i) {
+            delete *i;
+        }
+    }
+}
+void FreeLoops(LoopSet loops) {
+    for (LoopSet::iterator i = loops.begin(); i != loops.end(); ++ i) {
+        if (NULL != *i) {
+            delete *i;
+        }
+    }
+}
+
 void OutputRules(FILE* out, const RuleSet& rules) {
     for (size_t i = 0; i < rules.size(); ++ i) {
         rules[i]->Output(out);
@@ -33,9 +48,9 @@ void OutputAtoms(FILE* out, const AtomSet& atoms) {
     fprintf(out, "}\n");
 }
 
-void OutputSccs(FILE* out, const LoopSet& sccs) {
+void OutputLoops(FILE* out, const LoopSet& sccs) {
     for (LoopSet::const_iterator it = sccs.begin(); it != sccs.end(); ++ it) {
-        it->Output(out);
+        (*it)->Output(out);
     }
     fprintf(out, "\n");
 }

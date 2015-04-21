@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   main.cc
  * Author: yzf
  *
@@ -15,6 +15,7 @@
 #include "loop.h"
 #include "program.h"
 #include "algorithm.h"
+#include "hash.h"
 
 using namespace std;
 
@@ -22,7 +23,7 @@ extern FILE* yyin;
 extern RuleSet g_rules;
 extern int yyparse();
 /*
- * 
+ *
  */
 int main(int argc, char** argv) {
     yyin = fopen("res/sample.in", "r");
@@ -31,25 +32,16 @@ int main(int argc, char** argv) {
         exit(1);
     }
     yyparse();
-    
+
     Program program(g_rules);
-    AtomSet all, s;
-    all.insert(1);
-    all.insert(2);
-    all.insert(3);
-    s.insert(1);
-    s.insert(2);
-    s.insert(3);
-    Loop loop(s, &program);
+    LoopSet elementary_loops = ElementaryLoops(program);
+    OutputLoops(stdout, elementary_loops);
+    FreeLoops(elementary_loops);
     
-    printf("program:\n");
-    program.Output(stdout);
-    
-    printf("loop:");
-    loop.Output(stdout);
-    
-    cout << ElementaryLoopStar(loop, program) << endl;
-    
+    LoopSet proper_loops = ProperLoops(program);
+    OutputLoops(stdout, proper_loops);
+    FreeLoops(proper_loops);
+
     return 0;
 }
 

@@ -15,12 +15,13 @@ class Graph;
 
 class Program {
 public:
-    RuleSet rules_;
-public:
     Program(const RuleSet&);
     ~Program();
     Graph* GetDependencyGraph() const;
+    AtomSet GetAtoms() const;
     void Output(FILE* out) const;
+public:
+    RuleSet rules_;
 };
 
 #endif	/* PROGRAM_H */

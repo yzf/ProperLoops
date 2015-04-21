@@ -15,13 +15,19 @@ class Program;
 
 class Loop {
 public:
-    AtomSet atoms_;
-    const Program* program_;
-public:
-    Loop(const AtomSet&, const Program*);
+    Loop(AtomSet*, const Program*);
+    Loop(const Loop&);
+    ~Loop();
     RuleSet GetExternalSupport() const;
-    RuleSet GetExternalSupportWithConstrant(const AtomSet&) const;
+    RuleSet GetExternalSupportWithConstrant(const Loop*) const;
     void Output(FILE* out) const;
+    int hash_code() const;
+    bool operator < (const Loop& rhs) const;
+public:
+    AtomSet* atoms_;
+    const Program* program_;
+private:
+    mutable int hash_code_;
 };
 
 #endif	/* LOOP_H */

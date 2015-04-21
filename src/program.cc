@@ -1,3 +1,4 @@
+#include <cmath>
 #include "program.h"
 #include "vocabulary.h"
 #include "graph.h"
@@ -12,9 +13,7 @@ Program::Program(const RuleSet& rules) : rules_(rules) {
 }
 
 Program::~Program() {
-    for (RuleSet::iterator i = rules_.begin(); i != rules_.end(); ++ i)
-        if (NULL != *i)
-            delete *i;
+    FreeRules(rules_);
 }
 
 Graph* Program::GetDependencyGraph() const {
@@ -37,6 +36,18 @@ Graph* Program::GetDependencyGraph() const {
         }
     }
     return graph;
+}
+
+AtomSet Program::GetAtoms() const {
+    AtomSet atoms;
+    for (RuleSet::const_iterator i = rules_.begin(); i != rules_.end(); ++ i) {
+        atoms.insert((*i)->head_.begin(), (*i)->head_.end());
+        for (LiteralSet::const_iterator j = (*i)->body_.begin();
+                j != (*i)->body_.end(); ++j) {
+            atoms.insert(abs(*j));
+        }
+    }
+    return atoms;
 }
 
 void Program::Output(FILE* out) const {

@@ -16,6 +16,9 @@ class Program;
  * 论文相关的算法
  */
 bool ElementaryLoopStar(const Loop&, const Program&);
+LoopSet ElementaryLoops(const Program&);
+bool ProperLoopStar(const Loop&, const Program&);
+LoopSet ProperLoops(const Program&);
 
 
 #endif	/* ALGORITHM_H */

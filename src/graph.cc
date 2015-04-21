@@ -56,11 +56,11 @@ void Graph::Tarjan(const int& v, LoopSet& result) const {
     }
     
     int t;
-    Loop new_scc(AtomSet(), program_);
+    Loop* new_scc = new Loop(new AtomSet(), program_);
     do {
         t = s_[-- stop_];
         low_[t] = edge_map_.rbegin()->first + 1;
-        new_scc.atoms_.insert(t);
+        new_scc->atoms_->insert(t);
     } while (t != v);
     result.push_back(new_scc);
 }

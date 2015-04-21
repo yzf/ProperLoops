@@ -15,12 +15,15 @@
  * 各种辅助函数
  */
 AtomSet HeadOfRules(const RuleSet&);
+
+void FreeRules(RuleSet rules);
+void FreeLoops(LoopSet loops);
 /*
  * 输出函数
  */
 void OutputRules(FILE*, const RuleSet&);
 void OutputAtoms(FILE*, const AtomSet&);
-void OutputSccs(FILE*, const LoopSet&);
+void OutputLoops(FILE*, const LoopSet&);
 
 #endif	/* UTIL_H */
 

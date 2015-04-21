@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/algorithm.o \
 	${OBJECTDIR}/src/global.o \
 	${OBJECTDIR}/src/graph.o \
+	${OBJECTDIR}/src/hash.o \
 	${OBJECTDIR}/src/lex.o \
 	${OBJECTDIR}/src/loop.o \
 	${OBJECTDIR}/src/main.o \
@@ -86,6 +87,11 @@ ${OBJECTDIR}/src/graph.o: src/graph.cc
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/graph.o src/graph.cc
+
+${OBJECTDIR}/src/hash.o: src/hash.cc 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/hash.o src/hash.cc
 
 ${OBJECTDIR}/src/lex.o: src/lex.cc 
 	${MKDIR} -p ${OBJECTDIR}/src
