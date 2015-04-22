@@ -26,7 +26,7 @@ extern int yyparse();
  *
  */
 int main(int argc, char** argv) {
-    yyin = fopen("res/sample.in", "r");
+    yyin = fopen("res/2_5_1", "r");
     if (NULL == yyin) {
         printf("open file failed.");
         exit(1);
@@ -34,12 +34,15 @@ int main(int argc, char** argv) {
     yyparse();
 
     Program program(g_rules);
+    
     LoopSet elementary_loops = ElementaryLoops(program);
-    OutputLoops(stdout, elementary_loops);
+//    OutputLoops(stdout, elementary_loops);
+    printf("elementary loop: %lu\n", elementary_loops.size());
     FreeLoops(elementary_loops);
     
-    LoopSet proper_loops = ProperLoops(program);
-    OutputLoops(stdout, proper_loops);
+    LoopSet proper_loops = ProperLoops(program, program.GetAtoms());
+//    OutputLoops(stdout, proper_loops);
+    printf("proper loop: %lu\n", proper_loops.size());
     FreeLoops(proper_loops);
 
     return 0;

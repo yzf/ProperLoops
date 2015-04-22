@@ -19,9 +19,12 @@ public:
     ~Program();
     Graph* GetDependencyGraph() const;
     AtomSet GetAtoms() const;
+    bool is_dlp() const;
     void Output(FILE* out) const;
 public:
     RuleSet rules_;
+private:
+    bool is_dlp_;
 };
 
 #endif	/* PROGRAM_H */

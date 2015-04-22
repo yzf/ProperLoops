@@ -15,6 +15,8 @@
  * 各种辅助函数
  */
 AtomSet HeadOfRules(const RuleSet&);
+RelationType RelationBetween(const AtomSet&, const AtomSet&, AtomSet&);
+RelationType RelationBetween(const RuleSet&, const RuleSet&, RuleSet&);
 
 void FreeRules(RuleSet rules);
 void FreeLoops(LoopSet loops);

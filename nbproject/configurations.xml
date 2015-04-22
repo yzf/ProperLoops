@@ -23,6 +23,8 @@
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
+      <itemPath>res/2_4_1</itemPath>
+      <itemPath>res/2_5_1</itemPath>
       <itemPath>res/sample.in</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
@@ -72,6 +74,10 @@
       <item path="parse/lex.l" ex="false" tool="3" flavor2="0">
       </item>
       <item path="parse/yacc.y" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/2_4_1" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/2_5_1" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/sample.in" ex="false" tool="3" flavor2="0">
       </item>
@@ -146,6 +152,10 @@
       <item path="parse/lex.l" ex="false" tool="3" flavor2="0">
       </item>
       <item path="parse/yacc.y" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/2_4_1" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="res/2_5_1" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/sample.in" ex="false" tool="3" flavor2="0">
       </item>

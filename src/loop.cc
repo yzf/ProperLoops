@@ -92,6 +92,6 @@ int Loop::hash_code() const {
     return hash_code_;
 }
 
-bool Loop::operator < (const Loop& rhs) const {
-    return *atoms_ < *(rhs.atoms_);
-}
+//bool Loop::operator < (const Loop& rhs) const {
+//    return *atoms_ < *(rhs.atoms_);
+//}

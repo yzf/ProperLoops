@@ -22,7 +22,7 @@ public:
     RuleSet GetExternalSupportWithConstrant(const Loop*) const;
     void Output(FILE* out) const;
     int hash_code() const;
-    bool operator < (const Loop& rhs) const;
+    //bool operator < (const Loop& rhs) const;
 public:
     AtomSet* atoms_;
     const Program* program_;

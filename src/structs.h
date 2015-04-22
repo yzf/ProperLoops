@@ -27,6 +27,12 @@ enum RuleType {
     kConstrant,//约束
     kRule,//规则
 };
+// 集合间的关系，对应latex的符号名
+enum RelationType {
+    kSubset,
+    kSubsetEq,
+    kNSubsetEq,
+};
 /*
  * parse时用到的辅助数据结构
  */

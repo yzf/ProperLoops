@@ -14,15 +14,20 @@
 
 class Loop;
 
+class LoopCmp {
+public:
+    bool operator ()(const Loop*, const Loop*) const;
+};
+
 class Hash {
 public:
-    bool HasLoop(const Loop&) const;
-    void AddLoop(const Loop&);
+    bool HasLoop(const Loop*) const;
+    void AddLoop(const Loop*);
     void AddLoops(const LoopSet& loops);
     size_t Size() const;
     void Dump(FILE*) const;
 private:
-    std::set<Loop> hash_[kHashSize];
+    std::set<Loop*, LoopCmp> hash_[kHashSize];
 };
 
 #endif	/* HASH_H */

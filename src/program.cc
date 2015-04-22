@@ -9,7 +9,13 @@ using namespace std;
 extern Vocabulary g_vocabulary;
 
 Program::Program(const RuleSet& rules) : rules_(rules) {
-    
+    is_dlp_ = false;
+    for (RuleSet::const_iterator i = rules_.begin(); i != rules_.end(); ++ i) {
+        if ((*i)->head_.size() > 1) {
+            is_dlp_ = true;
+            break;
+        }
+    }
 }
 
 Program::~Program() {
@@ -48,6 +54,10 @@ AtomSet Program::GetAtoms() const {
         }
     }
     return atoms;
+}
+
+bool Program::is_dlp() const {
+    return is_dlp_;
 }
 
 void Program::Output(FILE* out) const {

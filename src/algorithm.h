@@ -15,10 +15,16 @@ class Program;
 /*
  * 论文相关的算法
  */
-bool ElementaryLoopStar(const Loop&, const Program&);
+
+// nlp
+bool ElementaryLoop(const Loop&, const Program&);
 LoopSet ElementaryLoops(const Program&);
+bool ProperLoop(const Loop&, const Program&, const AtomSet&);
+LoopSet ProperLoops(const Program&, const AtomSet&);
+// dlp
+bool ElementaryLoopStar(const Loop&, const Program&);
 bool ProperLoopStar(const Loop&, const Program&);
-LoopSet ProperLoops(const Program&);
+
 
 
 #endif	/* ALGORITHM_H */
