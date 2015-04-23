@@ -13,12 +13,16 @@
 #include "structs.h"
 
 class Program;
+class Hash;
 
 class Graph {
 public:
     explicit Graph(const Program*);
     Graph* GetInducedSubgraph(const AtomSet&) const;
     LoopSet GetSccs() const;
+    void ExtendSccsFromInducedSubgraph(const Loop*, Hash&, LoopSet&, LoopSet&) const;
+    void ExtendSccsFromInducedSubgraph(const AtomSet&, Hash&, LoopSet&, LoopSet&) const;
+    void ExtendSccsFromInducedSubgraph(const Loop*, const AtomSet&, Hash&, LoopSet&, LoopSet&) const;
     void Output(FILE* out) const;
 private:
     void Tarjan(const int&, LoopSet&) const;

@@ -18,13 +18,13 @@ public:
     Loop(AtomSet*, const Program*);
     Loop(const Loop&);
     ~Loop();
-    RuleSet GetExternalSupport() const;
-    RuleSet GetExternalSupportWithConstrant(const Loop*) const;
+    RuleSet ExternalSupportWithConstrant(const Loop*) const;
     void Output(FILE* out) const;
     int hash_code() const;
     //bool operator < (const Loop& rhs) const;
 public:
     AtomSet* atoms_;
+    RuleSet external_support_;
     const Program* program_;
 private:
     mutable int hash_code_;

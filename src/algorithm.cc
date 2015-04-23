@@ -11,6 +11,25 @@
 using namespace std;
 
 static int g_cnt;
+
+LoopSet AllLoops(const Program& program) {
+    LoopSet loops;
+    Hash hash;
+    Graph* g_p = program.GetDependencyGraph();
+    LoopSet sccs = g_p->GetSccs();
+    LoopSet scc_checked;
+    hash.AddLoops(sccs);
+    while (! sccs.empty()) {
+        Loop* c = sccs.front();
+        if (c->atoms_->size() > 1)
+            loops.push_back(c);
+        g_p->ExtendSccsFromInducedSubgraph(c, hash, sccs, scc_checked);
+        sccs.pop_front();
+    }
+    delete g_p;
+    return loops;
+}
+
 ////////////////////////////// nlp /////////////////////////////////
 /*
  * 判断loop是否为nlp的elementary loop
@@ -19,7 +38,7 @@ static int g_cnt;
 bool ElementaryLoop(const Loop& loop, const Program& program) {
     assert(! program.is_dlp());
     const Loop* l = &loop;
-    RuleSet rl = l->GetExternalSupport();
+    RuleSet rl = l->external_support_;
     Graph* g_p = program.GetDependencyGraph();//1+
     
     for (AtomSet::const_iterator i = l->atoms_->begin(); i != l->atoms_->end(); ++ i) {
@@ -34,7 +53,7 @@ bool ElementaryLoop(const Loop& loop, const Program& program) {
         
         while (! scc_star.empty()) {
             Loop* c = scc_star.front();
-            RuleSet rc = c->GetExternalSupport();
+            RuleSet rc = c->external_support_;
             RuleSet rc_diff_rl;
             RelationType relation_type = RelationBetween(rc, rl, rc_diff_rl);
             if (relation_type == kSubsetEq) {
@@ -50,20 +69,7 @@ bool ElementaryLoop(const Loop& loop, const Program& program) {
                 set_difference(c->atoms_->begin(), c->atoms_->end(),
                         head_diff.begin(), head_diff.end(), 
                         inserter(c_backslash_head_diff, c_backslash_head_diff.begin()));
-                Graph* g_c = g_p->GetInducedSubgraph(c_backslash_head_diff);//4+
-                LoopSet scc_c = g_c->GetSccs();//5+
-                while (! scc_c.empty()) {
-                    Loop* new_c = scc_c.front();
-                    if (! hash.HasLoop(new_c)) {
-                        hash.AddLoop(new_c);
-                        scc_star.push_back(new_c);
-                    }
-                    else {
-                        scc_checked.push_back(new_c);//该loop已经存在，但内存是新的，所以要放进scc_checked，统一销毁
-                    }
-                    scc_c.pop_front();
-                }
-                delete g_c;//4-
+                g_p->ExtendSccsFromInducedSubgraph(c_backslash_head_diff, hash, scc_star, scc_checked);
             }
             scc_checked.push_back(c);
             scc_star.pop_front();
@@ -96,31 +102,13 @@ LoopSet ElementaryLoops(const Program& program) {
         Loop* c = scc.front();
         bool is_elementary_loop = ElementaryLoop(*c, program);
         if (is_elementary_loop) {
-            loops.push_back(c);
+            if (c->atoms_->size() > 1)
+                loops.push_back(c);
         }
         else {
             scc_checked.push_back(c);//非elementary loop才需要销毁
         }
-        for (AtomSet::const_iterator i = c->atoms_->begin();
-                i != c->atoms_->end(); ++ i) {
-            const int& a = *i;
-            AtomSet c_backslash_a = *(c->atoms_);
-            c_backslash_a.erase(a);
-            Graph* g_c = g_p->GetInducedSubgraph(c_backslash_a);//3+
-            LoopSet scc_c = g_c->GetSccs();//4+
-            while (! scc_c.empty()) {
-                Loop* new_c = scc_c.front();
-                if (! hash.HasLoop(new_c)) {
-                    hash.AddLoop(new_c);
-                    scc.push_back(new_c);
-                }
-                else {
-                    scc_checked.push_back(new_c);
-                }
-                scc_c.pop_front();
-            }
-            delete g_c;//3-
-        }
+        g_p->ExtendSccsFromInducedSubgraph(c, hash, scc, scc_checked);
         scc.pop_front();
     }
     
@@ -141,7 +129,7 @@ bool ProperLoop(const Loop& loop, const Program& program, const AtomSet& atoms) 
     Graph* g_p_s = g_p->GetInducedSubgraph(atoms);
     delete g_p;
     const Loop* l = &loop;
-    RuleSet rl = l->GetExternalSupport();
+    RuleSet rl = l->external_support_;
     LoopSet scc = g_p_s->GetSccs();//2+
     LoopSet scc_checked;
     Hash hash;
@@ -149,7 +137,7 @@ bool ProperLoop(const Loop& loop, const Program& program, const AtomSet& atoms) 
 
     while (! scc.empty()) {
         Loop *c = scc.front();
-        RuleSet rc = c->GetExternalSupport();
+        RuleSet rc = c->external_support_;
         AtomSet c_diff_l;
         RuleSet rc_diff_rl;
         RelationType atom_relation = RelationBetween(*(c->atoms_), *(l->atoms_), c_diff_l);
@@ -167,26 +155,15 @@ bool ProperLoop(const Loop& loop, const Program& program, const AtomSet& atoms) 
             return false;
         }
         else if (rc.empty() || rc == rl) {
-            for (AtomSet::const_iterator i = c->atoms_->begin();
-                    i != c->atoms_->end(); ++ i) {
-                const int& a = *i;
-                AtomSet c_backslash_a = *(c->atoms_);
-                c_backslash_a.erase(a);
-                Graph* g_star = g_p_s->GetInducedSubgraph(c_backslash_a);//3+
-                LoopSet scc_star = g_star->GetSccs();//4+
-                while (! scc_star.empty()) {
-                    Loop* new_c = scc_star.front();
-                    if (! hash.HasLoop(new_c)) {
-                        scc.push_back(new_c);
-                        hash.AddLoop(new_c);
-                    }
-                    else {
-                        scc_checked.push_back(new_c);
-                    }
-                    scc_star.pop_front();
-                }
-                delete g_star;//3-
-            }
+            g_p_s->ExtendSccsFromInducedSubgraph(c, hash, scc, scc_checked);
+        }
+        else {
+            AtomSet head_diff = HeadOfRules(rc_diff_rl);
+            AtomSet c_backslash_head_diff;
+            set_difference(c->atoms_->begin(), c->atoms_->end(),
+                    head_diff.begin(), head_diff.end(), 
+                    inserter(c_backslash_head_diff, c_backslash_head_diff.begin()));
+            g_p_s->ExtendSccsFromInducedSubgraph(c_backslash_head_diff, hash, scc, scc_checked);
         }
         scc.pop_front();
     }
@@ -211,57 +188,21 @@ LoopSet ProperLoops(const Program& program, const AtomSet& atoms) {
         Loop* c = scc.front();
         bool is_proper_loop = ProperLoop(*c, program, atoms);
         if (is_proper_loop) {
-            loops.push_back(c);
-            RuleSet rc = c->GetExternalSupport();
+            if (c->atoms_->size() > 1)
+                loops.push_back(c);
+            RuleSet rc = c->external_support_;
             AtomSet head_rc = HeadOfRules(rc);
-            for (AtomSet::const_iterator i = head_rc.begin(); i != head_rc.end(); ++ i) {
-                const int& a = *i;
-                AtomSet c_backslash_a = *(c->atoms_);
-                c_backslash_a.erase(a);
-                Graph* g_c = g_p->GetInducedSubgraph(c_backslash_a);//3+
-                LoopSet scc_c = g_c->GetSccs();//4+
-                while (! scc_c.empty()) {
-                    Loop* new_c = scc_c.front();
-                    if (! hash.HasLoop(new_c)) {
-                        hash.AddLoop(new_c);
-                        scc.push_back(new_c);
-                    }
-                    else {
-                        scc_checked.push_back(new_c);
-                    }
-                    scc_c.pop_front();
-                }
-                delete g_c;//3-
-            }
+            g_p->ExtendSccsFromInducedSubgraph(c, head_rc, hash, scc, scc_checked);
         }
         else {
             scc_checked.push_back(c);
-            for (AtomSet::const_iterator i = c->atoms_->begin();
-                    i != c->atoms_->end(); ++ i) {
-                const int& a = *i;
-                AtomSet c_backslash_a = *(c->atoms_);
-                c_backslash_a.erase(a);
-                Graph* g_c = g_p->GetInducedSubgraph(c_backslash_a);//3+
-                LoopSet scc_c = g_c->GetSccs();//4+
-                while (! scc_c.empty()) {
-                    Loop* new_c = scc_c.front();
-                    if (! hash.HasLoop(new_c)) {
-                        hash.AddLoop(new_c);
-                        scc.push_back(new_c);
-                    }
-                    else {
-                        scc_checked.push_back(new_c);
-                    }
-                    scc_c.pop_front();
-                }
-                delete g_c;//3-
-            }
+            g_p->ExtendSccsFromInducedSubgraph(c, hash, scc, scc_checked);
         }
         scc.pop_front();
     }
     
     g_cnt += hash.Size();
-    printf("gnt: %d\n", g_cnt);
+    printf("g_cnt: %d\n", g_cnt);
     
     FreeLoops(scc_checked);
     delete g_p;//1-

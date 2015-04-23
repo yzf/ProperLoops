@@ -15,7 +15,7 @@ class Program;
 /*
  * 论文相关的算法
  */
-
+LoopSet AllLoops(const Program&);
 // nlp
 bool ElementaryLoop(const Loop&, const Program&);
 LoopSet ElementaryLoops(const Program&);

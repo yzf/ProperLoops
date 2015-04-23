@@ -9,12 +9,28 @@ Loop::Loop(AtomSet* atoms, const Program* program)
         : atoms_(atoms),
           program_(program),
           hash_code_(-1) {
-    
+    const AtomSet* x = atoms_;
+    const RuleSet& rules = program_->rules_;
+    for (size_t i = 0; i < rules.size(); ++ i) {
+        Rule* rule = rules[i];
+        AtomSet result;
+        set_intersection(x->begin(), x->end(), rule->head_.begin(),
+                rule->head_.end(), inserter(result, result.begin()));
+        if (! result.empty()) {
+            result.clear();
+            set_intersection(x->begin(), x->end(), rule->body_.begin(),
+                    rule->body_.end(), inserter(result, result.begin()));
+            if (result.empty()) {
+                external_support_.push_back(rule);
+            }
+        }
+    }
 }
 
 Loop::Loop(const Loop& rhs) {
     atoms_ = new AtomSet();
     *atoms_ = *(rhs.atoms_);
+    external_support_ = rhs.external_support_;
     program_ = rhs.program_;
     hash_code_ = rhs.hash_code_;
 }
@@ -27,37 +43,13 @@ Loop::~Loop() {
     hash_code_ = -1;
 }
 /*
- * R^-(x)
- */
-RuleSet Loop::GetExternalSupport() const {
-    const AtomSet* x = atoms_;
-    const RuleSet& rules = program_->rules_;
-    
-    RuleSet ret;
-    for (size_t i = 0; i < rules.size(); ++ i) {
-        Rule* rule = rules[i];
-        AtomSet result;
-        set_intersection(x->begin(), x->end(), rule->head_.begin(),
-                rule->head_.end(), inserter(result, result.begin()));
-        if (! result.empty()) {
-            result.clear();
-            set_intersection(x->begin(), x->end(), rule->body_.begin(),
-                    rule->body_.end(), inserter(result, result.begin()));
-            if (result.empty()) {
-                ret.push_back(rule);
-            }
-        }
-    }
-    return ret;
-}
-/*
  * R^-_x(y)
  */
-RuleSet Loop::GetExternalSupportWithConstrant(const Loop* loop) const {
+RuleSet Loop::ExternalSupportWithConstrant(const Loop* loop) const {
     const AtomSet* y = atoms_;
     const AtomSet* x = loop->atoms_;
     
-    RuleSet ret = GetExternalSupport();
+    RuleSet ret = external_support_;
     AtomSet x_diff_y;
     set_difference(x->begin(), x->end(), y->begin(), y->end(),
             inserter(x_diff_y, x_diff_y.end()));
