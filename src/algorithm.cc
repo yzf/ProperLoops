@@ -10,8 +10,6 @@
 
 using namespace std;
 
-static int g_cnt;
-
 LoopSet AllLoops(const Program& program) {
     LoopSet loops;
     Hash hash;
@@ -74,9 +72,7 @@ bool ElementaryLoop(const Loop& loop, const Program& program) {
             scc_checked.push_back(c);
             scc_star.pop_front();
         }
-        
-        g_cnt += hash.Size();
-        
+
         FreeLoops(scc_checked);//3-
         delete g_star;//2-
     }
@@ -96,11 +92,10 @@ LoopSet ElementaryLoops(const Program& program) {
     Hash hash;
     hash.AddLoops(scc);
     
-    g_cnt = 0;
-    
     while(! scc.empty()) {
         Loop* c = scc.front();
         bool is_elementary_loop = ElementaryLoop(*c, program);
+
         if (is_elementary_loop) {
             if (c->atoms_->size() > 1)
                 loops.push_back(c);
@@ -112,16 +107,13 @@ LoopSet ElementaryLoops(const Program& program) {
         scc.pop_front();
     }
     
-    g_cnt += hash.Size();
-    printf("g_cnt: %d\n", g_cnt);
-    
     FreeLoops(scc_checked);//2-
     delete g_p;//1-
     return loops;
 }
 /*
  * 判断loop是否为nlp的proper loop
- * 算法细节请参阅《回答集逻辑程序特征环的研究》中的算法３，其中S=Atoms(P)
+ * 算法细节请参阅《回答集逻辑程序特征环的研究》中的算法３
  */
 bool ProperLoop(const Loop& loop, const Program& program, const AtomSet& atoms) {
     assert(! program.is_dlp());
@@ -136,6 +128,7 @@ bool ProperLoop(const Loop& loop, const Program& program, const AtomSet& atoms) 
     hash.AddLoops(scc);
 
     while (! scc.empty()) {
+
         Loop *c = scc.front();
         RuleSet rc = c->external_support_;
         AtomSet c_diff_l;
@@ -168,12 +161,13 @@ bool ProperLoop(const Loop& loop, const Program& program, const AtomSet& atoms) 
         scc.pop_front();
     }
     
-    g_cnt += hash.Size();
-    
     FreeLoops(scc_checked);//2- 4-
     delete g_p_s;//1-
     return true;
 }
+/*
+ * 求nlp的所有proper loop，不包括单原子
+ */
 LoopSet ProperLoops(const Program& program, const AtomSet& atoms) {
     LoopSet loops;
     Graph* g_p = program.GetDependencyGraph();//1+
@@ -181,12 +175,11 @@ LoopSet ProperLoops(const Program& program, const AtomSet& atoms) {
     LoopSet scc_checked;
     Hash hash;
     hash.AddLoops(scc);
-    
-    g_cnt = 0;
-    
+
     while (! scc.empty()) {
-        Loop* c = scc.front();
+        Loop* c = scc.front();        
         bool is_proper_loop = ProperLoop(*c, program, atoms);
+
         if (is_proper_loop) {
             if (c->atoms_->size() > 1)
                 loops.push_back(c);
@@ -201,9 +194,6 @@ LoopSet ProperLoops(const Program& program, const AtomSet& atoms) {
         scc.pop_front();
     }
     
-    g_cnt += hash.Size();
-    printf("g_cnt: %d\n", g_cnt);
-    
     FreeLoops(scc_checked);
     delete g_p;//1-
     return loops;
@@ -212,15 +202,3 @@ LoopSet ProperLoops(const Program& program, const AtomSet& atoms) {
 
 
 ////////////////////////////// dlp /////////////////////////////////
-/*
- * 判断loop是否为程序program的EL*(P)
- */
-bool ElementaryLoopStar(const Loop& loop, const Program& program) {
-    return true;
-}
-/*
- * 判断loop是否为program的proper loop
- */
-bool ProperLoopStar(const Loop& loop, const Program& program) {
-    return true;
-}

@@ -22,9 +22,6 @@ LoopSet ElementaryLoops(const Program&);
 bool ProperLoop(const Loop&, const Program&, const AtomSet&);
 LoopSet ProperLoops(const Program&, const AtomSet&);
 // dlp
-bool ElementaryLoopStar(const Loop&, const Program&);
-bool ProperLoopStar(const Loop&, const Program&);
-
 
 
 #endif	/* ALGORITHM_H */

@@ -26,34 +26,31 @@ extern int yyparse();
  *
  */
 int main(int argc, char** argv) {
-    yyin = fopen("res/sample.in", "r");
+    yyin = fopen("res/2_5_1", "r");
     if (NULL == yyin) {
         printf("open file failed.");
         exit(1);
     }
     yyparse();
+    fclose(yyin);
 
     Program program(g_rules);
     clock_t t_begin, t_end;
     
     t_begin = clock();
-    LoopSet loops = AllLoops(program);
-    t_end = clock();
-    printf("all loops: %lu\ntimes: %f\n\n", loops.size(), (float)(t_end - t_begin)/1000000);
-    FreeLoops(loops);
-    
-    t_begin = clock();
     LoopSet elementary_loops = ElementaryLoops(program);
     t_end = clock();
 //    OutputLoops(stdout, elementary_loops);
-    printf("elementary loop: %lu\ntimes: %f\n\n", elementary_loops.size(), (float)(t_end - t_begin)/1000000);
+    printf("elementary loop: %lu\ntimes: %f\n\n", elementary_loops.size(),
+            (float)(t_end - t_begin)/1000000);
     FreeLoops(elementary_loops);
 
     t_begin = clock();
     LoopSet proper_loops = ProperLoops(program, program.GetAtoms());
     t_end = clock();
 //    OutputLoops(stdout, proper_loops);
-    printf("proper loop: %lu\ntimes: %f\n\n", proper_loops.size(), (float)(t_end - t_begin)/1000000);
+    printf("proper loop: %lu\ntimes: %f\n\n", proper_loops.size(),
+            (float)(t_end - t_begin)/1000000);
     FreeLoops(proper_loops);
 
     return 0;

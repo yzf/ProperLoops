@@ -36,7 +36,7 @@ Graph* Graph::GetInducedSubgraph(const AtomSet& atoms) const {
 }
 
 /*
- * tarjan算法
+ * tarjan算法，忽略单原子
  */
 void Graph::Tarjan(const int& v, LoopSet& result) const {
     int minc = low_[v] = pre_[v] = cnt_ ++;
@@ -63,11 +63,16 @@ void Graph::Tarjan(const int& v, LoopSet& result) const {
         low_[t] = edge_map_.rbegin()->first + 1;
         scc_atoms->insert(t);
     } while (t != v);
-    Loop* new_scc = new Loop(scc_atoms, program_);
-    result.push_back(new_scc);
+    if (scc_atoms->size() > 1) {
+        Loop* new_scc = new Loop(scc_atoms, program_);
+        result.push_back(new_scc);
+    }
+    else {//不考虑单原子
+        delete scc_atoms;
+    }
 }
 /*
- * 求graph的强连通分量
+ * 求graph的强连通分量，忽略单原子
  */
 LoopSet Graph::GetSccs() const {
     LoopSet ret;
@@ -89,7 +94,13 @@ LoopSet Graph::GetSccs() const {
     }
     return ret;
 }
-
+/*
+ * for each atom a\in c
+ *      g_star := the c\backslash {a} induced subgraph g_p(this)
+ *      scc_star := the set of SCC_S of g_star
+ *      append new element from scc_c to sccs
+ *      append old element from scc_c to scc_checked(稍后销毁)
+ */
 void Graph::ExtendSccsFromInducedSubgraph(const Loop* c, Hash& hash, LoopSet& sccs, LoopSet& scc_checked) const {
     for (AtomSet::const_iterator i = c->atoms_->begin();
             i != c->atoms_->end(); ++ i) {
@@ -112,7 +123,12 @@ void Graph::ExtendSccsFromInducedSubgraph(const Loop* c, Hash& hash, LoopSet& sc
         delete g_star;//3-
     }
 }
-
+/*
+ * g_c := the C\backslash atoms induced subgraph of g_p(this)
+ * scc_c := the set of SCC_S of g_c
+ * append new element from scc_c to sccs
+ * append old element from scc_c to scc_checked(稍后销毁)
+ */
 void Graph::ExtendSccsFromInducedSubgraph(const AtomSet& atoms, Hash& hash, LoopSet& sccs, LoopSet& scc_checked) const {
     Graph* g_c = GetInducedSubgraph(atoms);
     LoopSet scc_c = g_c->GetSccs();
@@ -129,7 +145,13 @@ void Graph::ExtendSccsFromInducedSubgraph(const AtomSet& atoms, Hash& hash, Loop
     }
     delete g_c;
 }
-
+/*
+ * for each atom a\in atoms
+ *      g_star := the c\backslash {a} induced subgraph g_p(this)
+ *      scc_star := the set of SCC_S of g_star
+ *      append new element from scc_c to sccs
+ *      append old element from scc_c to scc_checked(稍后销毁)
+ */
 void Graph::ExtendSccsFromInducedSubgraph(const Loop* c, const AtomSet& atoms,
         Hash& hash, LoopSet& sccs, LoopSet& scc_checked) const {
     for (AtomSet::const_iterator i = atoms.begin(); i != atoms.end(); ++ i) {
