@@ -53,9 +53,7 @@ void yyerror(const char* s) {
 %%
 dlp 
     : rules {
-        //printf("dlp\n");
     }
-    |
 ;
 
 rules
@@ -78,6 +76,7 @@ rule
             $$->head[i] = $1->atoms[i];
         }
         $$->body_length = 0;
+        delete $1;
     }
     | IMPLY conjunction PERIOD {//约束
         $$ = new RuleHelper();
@@ -87,6 +86,7 @@ rule
         for(int i = 0; i < ($2->length); ++ i) {
             $$->body[i] = $2->atoms[i];
         }
+        delete $2;
     }
     | disjunction IMPLY conjunction PERIOD {//规则
         $$ = new RuleHelper();
@@ -95,17 +95,19 @@ rule
         for(int i = 0; i < ($1->length); ++ i) {
             $$->head[i] = $1->atoms[i];
         }
+        delete $1;
         $$->body_length = $3->length;
         for(int i = 0; i < ($3->length); ++ i) {
             $$->body[i] = $3->atoms[i];
         }
+        delete $3;
     }
 ;
 
 disjunction
     : disjunction DIS atom {
         $1->atoms[$1->length] = $3;
-        $1->length ++;
+        ++ ($1->length);
     }
     | atom {
         $$ = new HeadHelper();
@@ -116,7 +118,7 @@ disjunction
 conjunction
     : conjunction COMMA literal {
         $1->atoms[$1->length] = $3;
-        $1->length ++;
+        ++ ($1->length);
     }
     | literal {
         $$ = new BodyHelper();
@@ -138,6 +140,8 @@ atom
     : ATOM LPAREN terms RPAREN {
         char str_buff[512];
         sprintf(str_buff, "%s(%s)", $1, $3);
+        free($1);
+        free($3);
         string atom_name = str_buff;
         int id = g_vocabulary.GetAtomId(atom_name);
         if(id == 0)
@@ -146,6 +150,7 @@ atom
     } 
     | ATOM {
         string atom_name = $1;
+        free($1);
         int id = g_vocabulary.GetAtomId(atom_name);
         if(id == 0)
             id = g_vocabulary.AddAtom(atom_name);
@@ -157,16 +162,18 @@ terms
     : terms COMMA term {
         char str_buff[512];
         sprintf(str_buff, "%s,%s", $1, $3);
+        free($1);
+        free($3);
         $$ = strdup(str_buff);
     }
     | term {
-        $$ = strdup($1);
+        $$ = $1;
     }
 ;
 
 term
     : ATOM {
-        $$ = strdup($1);
+        $$ = $1;
     }
 ;
 %%
