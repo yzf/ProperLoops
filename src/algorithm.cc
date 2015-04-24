@@ -34,9 +34,9 @@ LoopSet AllLoops(const Program& program) {
  * 算法细节请参阅《回答集逻辑程序特征环的研究》中的算法１
  */
 bool ElementaryLoop(const Loop& loop, const Program& program) {
-    assert(! program.is_dlp());
+    assert(program.is_nlp());
     const Loop* l = &loop;
-    RuleSet rl = l->external_support_;
+    const RuleSet& rl = l->external_support_;
     Graph* g_p = program.GetDependencyGraph();//1+
     
     for (AtomSet::const_iterator i = l->atoms_->begin(); i != l->atoms_->end(); ++ i) {
@@ -51,7 +51,7 @@ bool ElementaryLoop(const Loop& loop, const Program& program) {
         
         while (! scc_star.empty()) {
             Loop* c = scc_star.front();
-            RuleSet rc = c->external_support_;
+            const RuleSet& rc = c->external_support_;
             RuleSet rc_diff_rl;
             RelationType relation_type = RelationBetween(rc, rl, rc_diff_rl);
             if (relation_type == kSubsetEq) {
@@ -69,8 +69,8 @@ bool ElementaryLoop(const Loop& loop, const Program& program) {
                         inserter(c_backslash_head_diff, c_backslash_head_diff.begin()));
                 g_p->ExtendSccsFromInducedSubgraph(c_backslash_head_diff, hash, scc_star, scc_checked);
             }
-            scc_checked.push_back(c);
             scc_star.pop_front();
+            scc_checked.push_back(c);
         }
 
         FreeLoops(scc_checked);//3-
@@ -84,7 +84,7 @@ bool ElementaryLoop(const Loop& loop, const Program& program) {
  * 求nlp的所有elementary loops
  */
 LoopSet ElementaryLoops(const Program& program) {
-    assert(! program.is_dlp());
+    assert(program.is_nlp());
     LoopSet loops;
     Graph* g_p = program.GetDependencyGraph();//1+
     LoopSet scc = g_p->GetSccs();//2+
@@ -103,7 +103,7 @@ LoopSet ElementaryLoops(const Program& program) {
         else {
             scc_checked.push_back(c);//非elementary loop才需要销毁
         }
-        g_p->ExtendSccsFromInducedSubgraph(c, hash, scc, scc_checked);
+        g_p->ExtendSccsFromInducedSubgraph(c, hash, scc, scc_checked);   
         scc.pop_front();
     }
     
@@ -116,21 +116,21 @@ LoopSet ElementaryLoops(const Program& program) {
  * 算法细节请参阅《回答集逻辑程序特征环的研究》中的算法３
  */
 bool ProperLoop(const Loop& loop, const Program& program, const AtomSet& atoms) {
-    assert(! program.is_dlp());
+    assert(program.is_nlp());
     Graph* g_p = program.GetDependencyGraph();
     Graph* g_p_s = g_p->GetInducedSubgraph(atoms);
     delete g_p;
+    
     const Loop* l = &loop;
-    RuleSet rl = l->external_support_;
+    const RuleSet& rl = l->external_support_;
     LoopSet scc = g_p_s->GetSccs();//2+
     LoopSet scc_checked;
     Hash hash;
     hash.AddLoops(scc);
 
     while (! scc.empty()) {
-
         Loop *c = scc.front();
-        RuleSet rc = c->external_support_;
+        const RuleSet& rc = c->external_support_;
         AtomSet c_diff_l;
         RuleSet rc_diff_rl;
         RelationType atom_relation = RelationBetween(*(c->atoms_), *(l->atoms_), c_diff_l);
@@ -159,6 +159,7 @@ bool ProperLoop(const Loop& loop, const Program& program, const AtomSet& atoms) 
             g_p_s->ExtendSccsFromInducedSubgraph(c_backslash_head_diff, hash, scc, scc_checked);
         }
         scc.pop_front();
+        scc_checked.push_back(c);
     }
     
     FreeLoops(scc_checked);//2- 4-
@@ -169,6 +170,7 @@ bool ProperLoop(const Loop& loop, const Program& program, const AtomSet& atoms) 
  * 求nlp的所有proper loop，不包括单原子
  */
 LoopSet ProperLoops(const Program& program, const AtomSet& atoms) {
+    assert(program.is_nlp());
     LoopSet loops;
     Graph* g_p = program.GetDependencyGraph();//1+
     LoopSet scc = g_p->GetSccs();//2+
@@ -177,13 +179,12 @@ LoopSet ProperLoops(const Program& program, const AtomSet& atoms) {
     hash.AddLoops(scc);
 
     while (! scc.empty()) {
-        Loop* c = scc.front();        
+        Loop* c = scc.front(); 
         bool is_proper_loop = ProperLoop(*c, program, atoms);
 
         if (is_proper_loop) {
-            if (c->atoms_->size() > 1)
-                loops.push_back(c);
-            RuleSet rc = c->external_support_;
+            loops.push_back(c);
+            const RuleSet& rc = c->external_support_;
             AtomSet head_rc = HeadOfRules(rc);
             g_p->ExtendSccsFromInducedSubgraph(c, head_rc, hash, scc, scc_checked);
         }

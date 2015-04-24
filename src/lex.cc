@@ -474,9 +474,8 @@ extern "C" {
 	int yywrap(void);
 	int yylex(void);
 }
-extern int context_flag;/* 0 - not in any atom, 1 - in an atom*/
 
-#line 480 "../src/lex.cc"
+#line 479 "../src/lex.cc"
 
 #define INITIAL 0
 
@@ -663,9 +662,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 15 "lex.l"
+#line 14 "lex.l"
 
-#line 669 "../src/lex.cc"
+#line 668 "../src/lex.cc"
 
 	if ( !(yy_init) )
 		{
@@ -750,62 +749,62 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 16 "lex.l"
+#line 15 "lex.l"
 {
-                                            yylval.s=strdup(yytext); 
                                             if(strcmp(yytext, "not") == 0)
                                                 return NEGA;
+                                            yylval.s=strdup(yytext);
                                             return ATOM;
                                         }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 22 "lex.l"
+#line 21 "lex.l"
 {return IMPLY;			}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 23 "lex.l"
+#line 22 "lex.l"
 {return LPAREN;			}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 24 "lex.l"
+#line 23 "lex.l"
 {return RPAREN;			}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 25 "lex.l"
+#line 24 "lex.l"
 {return COMMA;			}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 26 "lex.l"
+#line 25 "lex.l"
 {return PERIOD;                 }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 27 "lex.l"
+#line 26 "lex.l"
 {return DIS;                    }
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 28 "lex.l"
+#line 27 "lex.l"
 {/* skip blankspace */	}
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 29 "lex.l"
+#line 28 "lex.l"
 {   }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 30 "lex.l"
+#line 29 "lex.l"
 ECHO;
 	YY_BREAK
-#line 809 "../src/lex.cc"
+#line 808 "../src/lex.cc"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1803,7 +1802,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 30 "lex.l"
+#line 29 "lex.l"
 
 
 

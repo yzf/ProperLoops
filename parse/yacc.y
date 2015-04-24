@@ -1,5 +1,5 @@
 %{
-#include <assert.h>
+#include <cassert>
 #include <cstdio>
 #include <cstring>
 #include <string>
@@ -16,8 +16,6 @@ extern "C" {
  
 extern RuleSet g_rules;
 extern Vocabulary g_vocabulary;
-
-int id;
 
 void yyerror(const char* s) {
     printf("Parser error: %s\n", s);
@@ -60,10 +58,12 @@ rules
     : rules rule {
         Rule* rule = new Rule($2);
         g_rules.push_back(rule);
+        delete $2;
     }
     | rule {
         Rule* rule = new Rule($1);
         g_rules.push_back(rule);
+        delete $1;
     }
 ;
 

@@ -9,10 +9,10 @@ using namespace std;
 extern Vocabulary g_vocabulary;
 
 Program::Program(const RuleSet& rules) : rules_(rules) {
-    is_dlp_ = false;
+    is_nlp_ = true;
     for (RuleSet::const_iterator i = rules_.begin(); i != rules_.end(); ++ i) {
         if ((*i)->head_.size() > 1) {
-            is_dlp_ = true;
+            is_nlp_ = false;
             break;
         }
     }
@@ -56,8 +56,8 @@ AtomSet Program::GetAtoms() const {
     return atoms;
 }
 
-bool Program::is_dlp() const {
-    return is_dlp_;
+bool Program::is_nlp() const {
+    return is_nlp_;
 }
 
 void Program::Output(FILE* out) const {

@@ -53,6 +53,7 @@ void FreeRules(RuleSet rules) {
     for (RuleSet::iterator i = rules.begin(); i != rules.end(); ++ i) {
         if (NULL != *i) {
             delete *i;
+            *i = NULL;
         }
     }
 }
@@ -63,6 +64,7 @@ void FreeLoops(LoopSet loops) {
     for (LoopSet::iterator i = loops.begin(); i != loops.end(); ++ i) {
         if (NULL != *i) {
             delete *i;
+            *i = NULL;
         }
     }
 }

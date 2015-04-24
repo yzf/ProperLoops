@@ -88,7 +88,7 @@ LoopSet Graph::GetSccs() const {
         s_.push_back(0);
     }
     for (EdgeMap::const_iterator it = edge_map_.begin(); it != edge_map_.end(); ++ it) {
-        int v = it->first;
+        const int& v = it->first;
         if (-1 == pre_[v])
             Tarjan(v, ret);
     }
@@ -111,6 +111,7 @@ void Graph::ExtendSccsFromInducedSubgraph(const Loop* c, Hash& hash, LoopSet& sc
         LoopSet scc_star = g_star->GetSccs();//4+
         while (! scc_star.empty()) {
             Loop* new_c = scc_star.front();
+            scc_star.pop_front();
             if (! hash.HasLoop(new_c)) {
                 sccs.push_back(new_c);
                 hash.AddLoop(new_c);
@@ -118,7 +119,6 @@ void Graph::ExtendSccsFromInducedSubgraph(const Loop* c, Hash& hash, LoopSet& sc
             else {
                 scc_checked.push_back(new_c);
             }
-            scc_star.pop_front();
         }
         delete g_star;//3-
     }
@@ -134,6 +134,7 @@ void Graph::ExtendSccsFromInducedSubgraph(const AtomSet& atoms, Hash& hash, Loop
     LoopSet scc_c = g_c->GetSccs();
     while (! scc_c.empty()) {
         Loop* new_c = scc_c.front();
+        scc_c.pop_front();
         if (! hash.HasLoop(new_c)) {
             hash.AddLoop(new_c);
             sccs.push_back(new_c);
@@ -141,7 +142,6 @@ void Graph::ExtendSccsFromInducedSubgraph(const AtomSet& atoms, Hash& hash, Loop
         else {
             scc_checked.push_back(new_c);//该loop已经存在，但内存是新的，所以要放进scc_checked，统一销毁
         }
-        scc_c.pop_front();
     }
     delete g_c;
 }

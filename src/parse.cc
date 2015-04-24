@@ -64,7 +64,7 @@
 /* Copy the first part of user declarations.  */
 #line 1 "yacc.y" /* yacc.c:339  */
 
-#include <assert.h>
+#include <cassert>
 #include <cstdio>
 #include <cstring>
 #include <string>
@@ -82,14 +82,12 @@ extern "C" {
 extern RuleSet g_rules;
 extern Vocabulary g_vocabulary;
 
-int id;
-
 void yyerror(const char* s) {
     printf("Parser error: %s\n", s);
 }
 
 
-#line 93 "../src/parse.cc" /* yacc.c:339  */
+#line 91 "../src/parse.cc" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -149,7 +147,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 28 "yacc.y" /* yacc.c:355  */
+#line 26 "yacc.y" /* yacc.c:355  */
 
     char* s;
     int i;
@@ -157,7 +155,7 @@ union YYSTYPE
     struct _HeadHelper* h;
     struct _BodyHelper* b;
 
-#line 161 "../src/parse.cc" /* yacc.c:355  */
+#line 159 "../src/parse.cc" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -172,7 +170,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 176 "../src/parse.cc" /* yacc.c:358  */
+#line 174 "../src/parse.cc" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -470,7 +468,7 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    55,    55,    60,    64,    71,    81,    91,   108,   112,
+       0,    53,    53,    58,    63,    71,    81,    91,   108,   112,
      119,   123,   131,   134,   140,   151,   162,   169,   175
 };
 #endif
@@ -1254,26 +1252,28 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 55 "yacc.y" /* yacc.c:1646  */
+#line 53 "yacc.y" /* yacc.c:1646  */
     {
     }
-#line 1261 "../src/parse.cc" /* yacc.c:1646  */
+#line 1259 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 60 "yacc.y" /* yacc.c:1646  */
+#line 58 "yacc.y" /* yacc.c:1646  */
     {
         Rule* rule = new Rule((yyvsp[0].r));
         g_rules.push_back(rule);
+        delete (yyvsp[0].r);
     }
-#line 1270 "../src/parse.cc" /* yacc.c:1646  */
+#line 1269 "../src/parse.cc" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 64 "yacc.y" /* yacc.c:1646  */
+#line 63 "yacc.y" /* yacc.c:1646  */
     {
         Rule* rule = new Rule((yyvsp[0].r));
         g_rules.push_back(rule);
+        delete (yyvsp[0].r);
     }
 #line 1279 "../src/parse.cc" /* yacc.c:1646  */
     break;
