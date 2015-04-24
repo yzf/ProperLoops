@@ -39,14 +39,15 @@ bool ElementaryLoop(const Loop& loop, const Program& program) {
     const RuleSet& rl = l->external_support_;
     Graph* g_p = program.GetDependencyGraph();//1+
     
+    Hash hash;
+    LoopSet scc_checked;//hash存放的元素是Loop*类型，所以要在hash不再被使用时才统一销毁所有scc
+        
     for (AtomSet::const_iterator i = l->atoms_->begin(); i != l->atoms_->end(); ++ i) {
         const int& a = *i;
         AtomSet l_backslash_a = *(l->atoms_);
         l_backslash_a.erase(a);
         Graph* g_star = g_p->GetInducedSubgraph(l_backslash_a);//2+
         LoopSet scc_star = g_star->GetSccs();//3+
-        LoopSet scc_checked;//hash存放的元素是Loop*类型，所以要在hash不再被使用时才统一销毁所有scc
-        Hash hash;
         hash.AddLoops(scc_star);
         
         while (! scc_star.empty()) {
@@ -72,11 +73,10 @@ bool ElementaryLoop(const Loop& loop, const Program& program) {
             scc_star.pop_front();
             scc_checked.push_back(c);
         }
-
-        FreeLoops(scc_checked);//3-
         delete g_star;//2-
     }
     
+    FreeLoops(scc_checked);//3-
     delete g_p;//1-
     return true;
 }

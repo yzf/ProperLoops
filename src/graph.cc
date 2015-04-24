@@ -79,14 +79,10 @@ LoopSet Graph::GetSccs() const {
     if (edge_map_.empty())
         return ret;
     stop_ = cnt_ = 0;
-    pre_.clear();
-    low_.clear();
-    s_.clear();
-    for (size_t i = 0; i <= edge_map_.rbegin()->first; ++ i) {
-        pre_.push_back(-1);
-        low_.push_back(0);
-        s_.push_back(0);
-    }
+    pre_.assign(edge_map_.rbegin()->first + 1, -1);
+    low_.assign(edge_map_.rbegin()->first + 1, 0);
+    s_.assign(edge_map_.rbegin()->first + 1, 0);
+
     for (EdgeMap::const_iterator it = edge_map_.begin(); it != edge_map_.end(); ++ it) {
         const int& v = it->first;
         if (-1 == pre_[v])
