@@ -12,6 +12,7 @@
 #include "rule.h"
 
 class Graph;
+class Loop;
 
 class Program {
 public:
@@ -23,6 +24,8 @@ public:
     void Output(FILE* out) const;
     LoopSet GetElementaryLoops() const;
     LoopSet GetProperLoops(const AtomSet&) const;
+    bool ExistWeakElementaryLoop(const Loop&) const;
+    bool IsHeadElementaryLoopFreeStar() const;
 public:
     RuleSet rules_;
 private:

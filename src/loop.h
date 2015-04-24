@@ -15,9 +15,7 @@ class Program;
 
 class Loop {
 public:
-    Loop(AtomSet*, const Program*);
-    Loop(const Loop&);
-    ~Loop();
+    Loop(const AtomSet&, const Program*);
     RuleSet ExternalSupportWithConstrant(const Loop*) const;
     void Output(FILE* out) const;
     int hash_code() const;
@@ -26,7 +24,7 @@ public:
     bool IsProperLoop(const AtomSet&) const;
     bool IsWeakElementaryLoop() const;
 public:
-    AtomSet* atoms_;
+    AtomSet atoms_;
     RuleSet external_support_;
     const Program* program_;
 private:

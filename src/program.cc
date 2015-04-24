@@ -1,5 +1,7 @@
 #include <cassert>
 #include <cmath>
+#include <algorithm>
+#include <vector>
 #include "program.h"
 #include "vocabulary.h"
 #include "graph.h"
@@ -81,7 +83,7 @@ LoopSet Program::GetElementaryLoops() const {
         bool is_elementary_loop = c->IsElementaryLoop();
 
         if (is_elementary_loop) {
-            if (c->atoms_->size() > 1)
+            if (c->atoms_.size() > 1)
                 loops.push_back(c);
         }
         else {
@@ -125,4 +127,102 @@ LoopSet Program::GetProperLoops(const AtomSet& atoms) const {
     FreeLoops(scc_checked);
     delete g_p;//1-
     return loops;
+}
+
+bool Program::ExistWeakElementaryLoop(const Loop& loop) const {
+    const Loop* e = &loop;
+    Graph* g_p = GetDependencyGraph();
+    LoopSet scc = g_p->GetSccs();
+    Loop* c = NULL;
+    for (LoopSet::const_iterator i = scc.begin(); i != scc.end(); ++ i) {
+        if (includes((*i)->atoms_.begin(), (*i)->atoms_.end(),
+                e->atoms_.begin(), e->atoms_.end())) {
+            c = *i;
+            break;
+        }
+    }
+    if (NULL == c) {
+        FreeLoops(scc);
+        delete g_p;
+        return false;
+    }
+    for (RuleSet::const_iterator i = rules_.begin(); i != rules_.end(); ++ i) {
+        const Rule* r = *i;
+        AtomSet body_r_diff_e;
+        set_difference(r->body_.begin(), r->body_.end(), e->atoms_.begin(),
+                e->atoms_.end(), inserter(body_r_diff_e, body_r_diff_e.begin()));
+        // body^(r)\cap E =\emptyset   =>    body^+(r)\cap E =\emptyset
+        if (body_r_diff_e.size() == r->body_.size()) {
+            continue;
+        }
+        // Get body^+(r)\backslash E
+        for (AtomSet::iterator j = body_r_diff_e.begin(); j != body_r_diff_e.end(); ) {
+            if (*j > 0) {
+                ++ j;
+            }
+            else {
+                body_r_diff_e.erase(j ++);
+            }
+        }
+        AtomSet c_backshlash_body_r_diff_e;
+        set_difference(c->atoms_.begin(), c->atoms_.end(), body_r_diff_e.begin(),
+                body_r_diff_e.end(), inserter(c_backshlash_body_r_diff_e,
+                c_backshlash_body_r_diff_e.begin()));
+        Graph* g_r = g_p->GetInducedSubgraph(c_backshlash_body_r_diff_e);
+        LoopSet scc_r = g_r->GetSccs();
+        for (LoopSet::const_iterator j = scc_r.begin(); j != scc_r.end(); ++ j) {
+            Loop* c_r = *j;
+            if (includes(c_r->atoms_.begin(), c_r->atoms_.end(), e->atoms_.begin(),
+                    e->atoms_.end())) {
+                AtomSet c_r_diff_e;
+                set_difference(c_r->atoms_.begin(), c_r->atoms_.end(), e->atoms_.begin(),
+                        e->atoms_.end(), inserter(c_r_diff_e, c_r_diff_e.begin()));
+                AtomSet head_r_cap_c_r_diff_e;
+                set_intersection(r->head_.begin(), r->head_.end(), c_r_diff_e.begin(),
+                        c_r_diff_e.end(), inserter(head_r_cap_c_r_diff_e, head_r_cap_c_r_diff_e.begin()));
+                if (! head_r_cap_c_r_diff_e.empty()) {
+                    FreeLoops(scc_r);
+                    delete g_r;
+                    FreeLoops(scc);
+                    delete g_p;
+                    return true;
+                }
+            }
+        }
+        FreeLoops(scc_r);
+        delete g_r;
+    }
+    
+    FreeLoops(scc);
+    delete g_p;
+    return false;
+}
+/*
+ * 
+ */
+bool Program::IsHeadElementaryLoopFreeStar() const {
+    AtomSet::const_iterator j;
+    AtomSet::const_iterator k;
+    for (RuleSet::const_iterator i = rules_.begin(); i != rules_.end(); ++ i) {
+        const Rule* r = *i;
+        if (r->head_.size() < 2)
+            continue;
+        for (j= r->head_.begin(); j != (-- r->head_.end()); ++ j) {
+            k = j;
+            ++ k;
+            for ( ; k != r->head_.end(); ++ k) {
+                AtomSet s;
+                s.insert(*j);
+                s.insert(*k);
+                Loop e(s, this);
+                if (e.IsLoop() && e.IsElementaryLoop()) {
+                    return false;
+                }
+                if (ExistWeakElementaryLoop(e)) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
 }

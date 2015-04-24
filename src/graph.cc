@@ -57,18 +57,15 @@ void Graph::Tarjan(const int& v, LoopSet& result) const {
     }
     
     int t;
-    AtomSet* scc_atoms = new AtomSet();
+    AtomSet scc_atoms;
     do {
         t = s_[-- stop_];
         low_[t] = edge_map_.rbegin()->first + 1;
-        scc_atoms->insert(t);
+        scc_atoms.insert(t);
     } while (t != v);
-    if (scc_atoms->size() > 1) {
+    if (scc_atoms.size() > 1) {
         Loop* new_scc = new Loop(scc_atoms, program_);
         result.push_back(new_scc);
-    }
-    else {//不考虑单原子
-        delete scc_atoms;
     }
 }
 /*
@@ -98,9 +95,9 @@ LoopSet Graph::GetSccs() const {
  *      append old element from scc_c to scc_checked(稍后销毁)
  */
 void Graph::ExtendSccsFromInducedSubgraph(const Loop* c, Hash& hash, LoopSet& sccs, LoopSet& scc_checked) const {
-    AtomSet c_backslash_a = *(c->atoms_);
-    for (AtomSet::const_iterator i = c->atoms_->begin();
-            i != c->atoms_->end(); ++ i) {
+    AtomSet c_backslash_a = c->atoms_;
+    for (AtomSet::const_iterator i = c->atoms_.begin();
+            i != c->atoms_.end(); ++ i) {
         const int& a = *i;
         c_backslash_a.erase(a);
         Graph* g_star = GetInducedSubgraph(c_backslash_a);//3+
@@ -151,7 +148,7 @@ void Graph::ExtendSccsFromInducedSubgraph(const AtomSet& atoms, Hash& hash, Loop
  */
 void Graph::ExtendSccsFromInducedSubgraph(const Loop* c, const AtomSet& atoms,
         Hash& hash, LoopSet& sccs, LoopSet& scc_checked) const {
-    AtomSet c_backslash_a = *(c->atoms_);
+    AtomSet c_backslash_a = c->atoms_;
     for (AtomSet::const_iterator i = atoms.begin(); i != atoms.end(); ++ i) {
         const int& a = *i;
         c_backslash_a.erase(a);

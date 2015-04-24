@@ -4,7 +4,7 @@
 using namespace std;
 
 bool LoopCmp::operator ()(const Loop* lhs, const Loop* rhs) const {
-    return *(lhs->atoms_) < *(rhs->atoms_);
+    return lhs->atoms_ < rhs->atoms_;
 }
 
 bool Hash::HasLoop(const Loop* loop) const {

@@ -8,20 +8,19 @@
 
 using namespace std;
 
-Loop::Loop(AtomSet* atoms, const Program* program)
+Loop::Loop(const AtomSet& atoms, const Program* program)
         : atoms_(atoms),
           program_(program),
           hash_code_(-1) {
-    const AtomSet* x = atoms_;
     const RuleSet& rules = program_->rules_;
     for (size_t i = 0; i < rules.size(); ++ i) {
         Rule* rule = rules[i];
         AtomSet result;
-        set_intersection(x->begin(), x->end(), rule->head_.begin(),
+        set_intersection(atoms_.begin(), atoms_.end(), rule->head_.begin(),
                 rule->head_.end(), inserter(result, result.begin()));
         if (! result.empty()) {
             result.clear();
-            set_intersection(x->begin(), x->end(), rule->body_.begin(),
+            set_intersection(atoms_.begin(), atoms_.end(), rule->body_.begin(),
                     rule->body_.end(), inserter(result, result.begin()));
             if (result.empty()) {
                 external_support_.push_back(rule);
@@ -29,32 +28,16 @@ Loop::Loop(AtomSet* atoms, const Program* program)
         }
     }
 }
-
-Loop::Loop(const Loop& rhs) {
-    atoms_ = new AtomSet();
-    *atoms_ = *(rhs.atoms_);
-    external_support_ = rhs.external_support_;
-    program_ = rhs.program_;
-    hash_code_ = rhs.hash_code_;
-}
-
-Loop::~Loop() {
-    if (atoms_ != NULL) {
-        delete atoms_;
-        atoms_ = NULL;
-    }
-    hash_code_ = -1;
-}
 /*
  * R^-_x(y)
  */
 RuleSet Loop::ExternalSupportWithConstrant(const Loop* loop) const {
-    const AtomSet* y = atoms_;
-    const AtomSet* x = loop->atoms_;
+    const AtomSet& y = atoms_;
+    const AtomSet& x = loop->atoms_;
     
     RuleSet ret = external_support_;
     AtomSet x_diff_y;
-    set_difference(x->begin(), x->end(), y->begin(), y->end(),
+    set_difference(x.begin(), x.end(), y.begin(), y.end(),
             inserter(x_diff_y, x_diff_y.end()));
     int i = 0;
     while (i < ret.size()) {
@@ -73,15 +56,15 @@ RuleSet Loop::ExternalSupportWithConstrant(const Loop* loop) const {
 }
 
 void Loop::Output(FILE* out) const {
-    OutputAtoms(out, *atoms_);
+    OutputAtoms(out, atoms_);
 }
 
 bool Loop::IsLoop() const {
     Graph* graph = program_->GetDependencyGraph();
-    Graph* subgraph = graph->GetInducedSubgraph(*atoms_);
+    Graph* subgraph = graph->GetInducedSubgraph(atoms_);
     LoopSet scc = subgraph->GetSccs();
     bool is_loop = false;
-    if (scc.size() == 1 && *(scc.front()->atoms_) == *(atoms_)) {
+    if (scc.size() == 1 && scc.front()->atoms_ == atoms_) {
         is_loop = true;
     }
     delete subgraph;
@@ -92,7 +75,7 @@ bool Loop::IsLoop() const {
 int Loop::hash_code() const {
     if (-1 == hash_code_) {
         hash_code_ = 0;
-        for (AtomSet::const_iterator i = atoms_->begin(); i != atoms_->end(); ++ i) {
+        for (AtomSet::const_iterator i = atoms_.begin(); i != atoms_.end(); ++ i) {
             hash_code_ += (*i) * (*i);
             hash_code_ %= kHashSize;
         }
@@ -120,7 +103,7 @@ bool Loop::IsProperLoop(const AtomSet& atoms) const {
         const RuleSet& rc = c->external_support_;
         AtomSet c_diff_l;
         RuleSet rc_diff_rl;
-        RelationType atom_relation = RelationBetween(*(c->atoms_), *atoms_, c_diff_l);
+        RelationType atom_relation = RelationBetween(c->atoms_, atoms_, c_diff_l);
         RelationType rule_relation = RelationBetween(rc, rl, rc_diff_rl);
         if (atom_relation == kSubset && rule_relation == kSubsetEq) {
             FreeLoops(scc);//2- 4-
@@ -140,7 +123,7 @@ bool Loop::IsProperLoop(const AtomSet& atoms) const {
         else {
             AtomSet head_diff = HeadOfRules(rc_diff_rl);
             AtomSet c_backslash_head_diff;
-            set_difference(c->atoms_->begin(), c->atoms_->end(),
+            set_difference(c->atoms_.begin(), c->atoms_.end(),
                     head_diff.begin(), head_diff.end(), 
                     inserter(c_backslash_head_diff, c_backslash_head_diff.begin()));
             g_p->ExtendSccsFromInducedSubgraph(c_backslash_head_diff, hash, scc, scc_checked);
@@ -161,9 +144,9 @@ bool Loop::IsWeakElementaryLoop() const {
     Hash hash;
     LoopSet scc;
     LoopSet scc_checked;//hash存放的元素是Loop*类型，所以要在hash不再被使用时才统一销毁所有scc
-    AtomSet l_backslash_a = *atoms_;
+    AtomSet l_backslash_a = atoms_;
         
-    for (AtomSet::const_iterator i = atoms_->begin(); i != atoms_->end(); ++ i) {
+    for (AtomSet::const_iterator i = atoms_.begin(); i != atoms_.end(); ++ i) {
         const int& a = *i;
         l_backslash_a.erase(a);
         
@@ -184,7 +167,7 @@ bool Loop::IsWeakElementaryLoop() const {
             else {
                 AtomSet head_diff = HeadOfRules(rc_diff_rl);
                 AtomSet c_backslash_head_diff;
-                set_difference(c->atoms_->begin(), c->atoms_->end(),
+                set_difference(c->atoms_.begin(), c->atoms_.end(),
                         head_diff.begin(), head_diff.end(), 
                         inserter(c_backslash_head_diff, c_backslash_head_diff.begin()));
                 g_p->ExtendSccsFromInducedSubgraph(c_backslash_head_diff, hash, scc, scc_checked);
