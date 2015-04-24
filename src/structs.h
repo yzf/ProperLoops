@@ -12,7 +12,7 @@
 #include <set>
 #include <map>
 #include <vector>
-#include <deque>
+#include <list>
 
 class Rule;
 class Loop;
@@ -59,7 +59,7 @@ typedef std::set<int> LiteralSet;
 typedef LiteralSet AtomSet;
 typedef std::vector<std::string> AtomNameSet;
 typedef std::map<int, AtomSet> EdgeMap;
-typedef std::deque<Loop*> LoopSet;
+typedef std::list<Loop*> LoopSet;
 
 #endif	/* STRUCTS_H */
 

@@ -35,7 +35,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/src/algorithm.o \
 	${OBJECTDIR}/src/global.o \
 	${OBJECTDIR}/src/graph.o \
 	${OBJECTDIR}/src/hash.o \
@@ -72,11 +71,6 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/properloops: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/properloops ${OBJECTFILES} ${LDLIBSOPTIONS}
-
-${OBJECTDIR}/src/algorithm.o: src/algorithm.cc 
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/algorithm.o src/algorithm.cc
 
 ${OBJECTDIR}/src/global.o: src/global.cc 
 	${MKDIR} -p ${OBJECTDIR}/src

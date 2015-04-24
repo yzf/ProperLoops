@@ -21,7 +21,8 @@ public:
     RuleSet ExternalSupportWithConstrant(const Loop*) const;
     void Output(FILE* out) const;
     int hash_code() const;
-    //bool operator < (const Loop& rhs) const;
+    bool IsElementaryLoop() const;
+    bool IsProperLoop(const AtomSet&) const;
 public:
     AtomSet* atoms_;
     RuleSet external_support_;

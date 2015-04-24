@@ -79,9 +79,9 @@ LoopSet Graph::GetSccs() const {
     if (edge_map_.empty())
         return ret;
     stop_ = cnt_ = 0;
-    pre_.assign(edge_map_.rbegin()->first + 1, -1);
-    low_.assign(edge_map_.rbegin()->first + 1, 0);
-    s_.assign(edge_map_.rbegin()->first + 1, 0);
+    pre_.assign(g_vocabulary.Size() + 1, -1);
+    low_.assign(g_vocabulary.Size() + 1, 0);
+    s_.assign(g_vocabulary.Size() + 1, 0);
 
     for (EdgeMap::const_iterator it = edge_map_.begin(); it != edge_map_.end(); ++ it) {
         const int& v = it->first;
@@ -98,13 +98,14 @@ LoopSet Graph::GetSccs() const {
  *      append old element from scc_c to scc_checked(稍后销毁)
  */
 void Graph::ExtendSccsFromInducedSubgraph(const Loop* c, Hash& hash, LoopSet& sccs, LoopSet& scc_checked) const {
+    AtomSet c_backslash_a = *(c->atoms_);
     for (AtomSet::const_iterator i = c->atoms_->begin();
             i != c->atoms_->end(); ++ i) {
         const int& a = *i;
-        AtomSet c_backslash_a = *(c->atoms_);
         c_backslash_a.erase(a);
         Graph* g_star = GetInducedSubgraph(c_backslash_a);//3+
         LoopSet scc_star = g_star->GetSccs();//4+
+        delete g_star;//3-
         while (! scc_star.empty()) {
             Loop* new_c = scc_star.front();
             scc_star.pop_front();
@@ -116,7 +117,7 @@ void Graph::ExtendSccsFromInducedSubgraph(const Loop* c, Hash& hash, LoopSet& sc
                 scc_checked.push_back(new_c);
             }
         }
-        delete g_star;//3-
+        c_backslash_a.insert(a);
     }
 }
 /*
@@ -128,6 +129,7 @@ void Graph::ExtendSccsFromInducedSubgraph(const Loop* c, Hash& hash, LoopSet& sc
 void Graph::ExtendSccsFromInducedSubgraph(const AtomSet& atoms, Hash& hash, LoopSet& sccs, LoopSet& scc_checked) const {
     Graph* g_c = GetInducedSubgraph(atoms);
     LoopSet scc_c = g_c->GetSccs();
+    delete g_c;
     while (! scc_c.empty()) {
         Loop* new_c = scc_c.front();
         scc_c.pop_front();
@@ -139,7 +141,6 @@ void Graph::ExtendSccsFromInducedSubgraph(const AtomSet& atoms, Hash& hash, Loop
             scc_checked.push_back(new_c);//该loop已经存在，但内存是新的，所以要放进scc_checked，统一销毁
         }
     }
-    delete g_c;
 }
 /*
  * for each atom a\in atoms
@@ -150,12 +151,13 @@ void Graph::ExtendSccsFromInducedSubgraph(const AtomSet& atoms, Hash& hash, Loop
  */
 void Graph::ExtendSccsFromInducedSubgraph(const Loop* c, const AtomSet& atoms,
         Hash& hash, LoopSet& sccs, LoopSet& scc_checked) const {
+    AtomSet c_backslash_a = *(c->atoms_);
     for (AtomSet::const_iterator i = atoms.begin(); i != atoms.end(); ++ i) {
         const int& a = *i;
-        AtomSet c_backslash_a = *(c->atoms_);
         c_backslash_a.erase(a);
         Graph* g_c = GetInducedSubgraph(c_backslash_a);//3+
         LoopSet scc_c = g_c->GetSccs();//4+
+        delete g_c;//3-
         while (! scc_c.empty()) {
             Loop* new_c = scc_c.front();
             if (! hash.HasLoop(new_c)) {
@@ -167,7 +169,7 @@ void Graph::ExtendSccsFromInducedSubgraph(const Loop* c, const AtomSet& atoms,
             }
             scc_c.pop_front();
         }
-        delete g_c;//3-
+        c_backslash_a.insert(a);
     }
 }
 

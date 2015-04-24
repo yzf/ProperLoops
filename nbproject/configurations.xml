@@ -4,7 +4,6 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>src/algorithm.h</itemPath>
       <itemPath>src/graph.h</itemPath>
       <itemPath>src/hash.h</itemPath>
       <itemPath>src/loop.h</itemPath>
@@ -34,7 +33,6 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>src/algorithm.cc</itemPath>
       <itemPath>src/global.cc</itemPath>
       <itemPath>src/graph.cc</itemPath>
       <itemPath>src/hash.cc</itemPath>
@@ -92,10 +90,6 @@
       <item path="res/2_7_1" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/sample.in" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/algorithm.cc" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/algorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/global.cc" ex="false" tool="1" flavor2="0">
       </item>
@@ -178,10 +172,6 @@
       <item path="res/2_7_1" ex="false" tool="3" flavor2="0">
       </item>
       <item path="res/sample.in" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/algorithm.cc" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/algorithm.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/global.cc" ex="false" tool="1" flavor2="0">
       </item>

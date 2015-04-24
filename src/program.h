@@ -21,6 +21,8 @@ public:
     AtomSet GetAtoms() const;
     bool is_nlp() const;
     void Output(FILE* out) const;
+    LoopSet GetElementaryLoops() const;
+    LoopSet GetProperLoops(const AtomSet&) const;
 public:
     RuleSet rules_;
 private:

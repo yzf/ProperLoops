@@ -14,7 +14,6 @@
 #include "util.h"
 #include "loop.h"
 #include "program.h"
-#include "algorithm.h"
 #include "hash.h"
 
 using namespace std;
@@ -38,7 +37,7 @@ int main(int argc, char** argv) {
     clock_t t_begin, t_end;
     
     t_begin = clock();
-    LoopSet elementary_loops = ElementaryLoops(program);
+    LoopSet elementary_loops = program.GetElementaryLoops();
     t_end = clock();
 //    OutputLoops(stdout, elementary_loops);
     printf("elementary loop: %lu\ntimes: %f\n\n", elementary_loops.size(),
@@ -46,7 +45,7 @@ int main(int argc, char** argv) {
     FreeLoops(elementary_loops);
 
     t_begin = clock();
-    LoopSet proper_loops = ProperLoops(program, program.GetAtoms());
+    LoopSet proper_loops = program.GetProperLoops(program.GetAtoms());
     t_end = clock();
 //    OutputLoops(stdout, proper_loops);
     printf("proper loop: %lu\ntimes: %f\n\n", proper_loops.size(),
