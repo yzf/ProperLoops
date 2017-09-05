@@ -77,7 +77,7 @@ LoopSet Program::GetElementaryLoops() const {
     LoopSet scc_checked;
     Hash hash;
     hash.AddLoops(scc);
-    
+
     while(! scc.empty()) {
         Loop* c = scc.front();
         bool is_elementary_loop = c->IsElementaryLoop();
@@ -89,10 +89,10 @@ LoopSet Program::GetElementaryLoops() const {
         else {
             scc_checked.push_back(c);//非elementary loop才需要销毁
         }
-        g_p->ExtendSccsFromInducedSubgraph(c, hash, scc, scc_checked);   
+        g_p->ExtendSccsFromInducedSubgraph(c, hash, scc, scc_checked);
         scc.pop_front();
     }
-    
+
     FreeLoops(scc_checked);//2-
     delete g_p;//1-
     return loops;
@@ -101,14 +101,17 @@ LoopSet Program::GetElementaryLoops() const {
 LoopSet Program::GetProperLoops(const AtomSet& atoms) const {
     assert(is_nlp());
     LoopSet loops;
-    Graph* g_p = GetDependencyGraph();//1+
+    Graph* depengdGraph =  GetDependencyGraph();
+
+    Graph* g_p = depengdGraph->GetInducedSubgraph(atoms);//1+
+
     LoopSet scc = g_p->GetSccs();//2+
     LoopSet scc_checked;
     Hash hash;
     hash.AddLoops(scc);
 
     while (! scc.empty()) {
-        Loop* c = scc.front(); 
+        Loop* c = scc.front();
         bool is_proper_loop = c->IsProperLoop(atoms);
 
         if (is_proper_loop) {
@@ -123,9 +126,10 @@ LoopSet Program::GetProperLoops(const AtomSet& atoms) const {
         }
         scc.pop_front();
     }
-    
+
     FreeLoops(scc_checked);
     delete g_p;//1-
+    delete depengdGraph;
     return loops;
 }
 
@@ -192,13 +196,13 @@ bool Program::ExistWeakElementaryLoop(const Loop& loop) const {
         FreeLoops(scc_r);
         delete g_r;
     }
-    
+
     FreeLoops(scc);
     delete g_p;
     return false;
 }
 /*
- * 
+ *
  */
 bool Program::IsHeadElementaryLoopFreeStar() const {
     AtomSet::const_iterator j;
